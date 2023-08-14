@@ -1,31 +1,38 @@
-const express=require("express");
-const app=express();
-const portnum=3002;
+//Imports
+const express = require("express");
+const namelist = require("./routes/namelist")
+const booklist = require("./routes/booklist")
+const langlist = require("./routes/langlist")
 
-const studentslist=[
-    {
-        name:"Priya",
-        age:19
-    },
-    {
-        name:"Kavi",
-        age:20
-    }
-]
+//Initializations
+const app = express();
+const PORT =3005;
 
-app.use(express.json())
+//Routes
+app.use(express.json());
+app.use(namelist);
+app.use(booklist);
+app.use(langlist);
+app.use((req,res,next)=>{
+    console.log("Before starting");
+    next();
+},);
 
-app.listen(portnum,()=>{console.log(`Server is running on port number: ${portnum}`)});
 
-app.get('/namelist',(request,response)=>
-{
-    response.send(studentslist);
+
+app.listen(PORT,()=>{
+    console.log(`Server runs on port number ${PORT}`);
 });
 
 
-app.post('/namelist',(request,response)=>{
-    console.log(request.body);
-    studentslist.push(request.body);
-    response.send(studentslist);
-    response.send(201)
-})
+app.get("/",
+    (req,res,next)=>{
+        const coloredHeading = `<h1 style="color: blue;">This is Priya!</h1>`;
+        res.send(coloredHeading);
+        next();
+    },
+    
+    (req,res)=>{
+        console.log("After displaying in the server");
+    }
+);
